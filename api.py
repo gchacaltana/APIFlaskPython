@@ -7,6 +7,7 @@ from flask.ext import restful
 app = Flask(__name__)
 api = restful.Api(app)
 
+#array de clientes
 customers = {
 	'1':{'company_name':'Laboratorios AdHoc S.A','ruc':'20987876261','billing_contact':'Gonzalo Chacaltana'},
 	'2':{'company_name':'Química Suecia Inc','ruc':'20769823211','billing_contact':'Steve Jhonson'},
@@ -18,6 +19,7 @@ customers = {
 	'8':{'company_name':'Compu Labs EIRL','ruc':'20986722561','billing_contact':'Eduardo García'},
 	}
 
+#Clase ErrorMessage
 class ErrorMessage(object):
 	def __init__(self):
 		pass
@@ -25,7 +27,8 @@ class ErrorMessage(object):
 	@staticmethod
 	def printError(error_code, error_message):
 		return {'error_code': error_code, 'message': error_message}
-	
+
+#Clase Clientes
 class Customers(restful.Resource):
     def get(self, id):
 		if id in customers:
@@ -33,6 +36,7 @@ class Customers(restful.Resource):
 		else:
 			return ErrorMessage.printError(400, 'The customer does not exist.')
 
+#ruteo
 api.add_resource(Customers,'/customers/<string:id>')
 
 if __name__ == '__main__':
