@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # author: Gonzalo Chacaltana @gchacaltanab
-from flask import Flask
+from flask import Flask, request
 from flask.ext import restful
 from ErrorMessage import ErrorMessage
 
@@ -57,12 +57,27 @@ customers = {
 class Customers(restful.Resource):
 
     def get(self, id):
-        if id in customers:
-            return customers[id]
-        else:
+        if self.validCustomers(id) is False:
             return ErrorMessage.printError(
                 400, 'The customer does not exist.'
                 )
+
+        return customers[id]
+
+    def put(self, id):
+        if self.validCustomers(id) is False:
+            return ErrorMessage.printError(
+                400, 'The customer does not exist.'
+                )
+
+        customers[id][request.form['field']] = request.form['value']
+        return customers[id]
+
+    def validCustomers(self, id):
+        if id in customers:
+            return True
+        else:
+            return False
 
 #ruteo
 api.add_resource(Customers, '/customers/<string:id>')
